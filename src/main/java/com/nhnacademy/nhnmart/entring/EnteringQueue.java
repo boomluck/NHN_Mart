@@ -51,7 +51,7 @@ public class EnteringQueue {
         /* TODO#3-4 대기열에 고객을 추가하는 메서드를 구현합니다.
            - queue.size() >= capacity이면 대기할 수 있도록 구현합니다.
         */
-        while (queue.size() >= capacity) {
+        if (queue.size() >= capacity) {
             try {
                 wait();
             }
@@ -67,7 +67,7 @@ public class EnteringQueue {
 
     public synchronized Customer getCustomer(){
         // TODO#3-6 queue가 비어 있다면 대기합니다.
-        while (queue.isEmpty()) {
+        if (queue.isEmpty()) {
             try {
                 wait();
             }
