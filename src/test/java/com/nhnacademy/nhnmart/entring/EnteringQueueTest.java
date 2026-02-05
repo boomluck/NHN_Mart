@@ -47,13 +47,19 @@ class EnteringQueueTest {
     @Test
     void addCustomer() throws Exception {
         // TODO#3-10 id=100인 고객을 enteringQueue에 등록하고 검증합니다.
+        int beforeAdd = enteringQueue.getQueueSize();
         enteringQueue.addCustomer(new Customer(100, "NHN아카데미100", 1000000));
+        int afterAdd = enteringQueue.getQueueSize();
+        Assertions.assertEquals(beforeAdd + 1, afterAdd);
     }
 
     @Test
     @DisplayName("queue - poll test")
     void getCustomer() {
         // TODO#3-11 enteringQueue에서 enteringQueue.getCustomer() 호출 시 반환되는 값을 검증합니다.
+        Customer customer = enteringQueue.getCustomer();
+        Customer comparison = new Customer(1, "NHN아카데미1", 1000000);
+        Assertions.assertEquals(comparison, customer);
     }
 
     @Test
@@ -73,8 +79,14 @@ class EnteringQueueTest {
         producer.start();
 
         // TODO#3-12 2초 대기 후 enteringQueue.getCustomer() 호출해서 소비할 수 있도록 consumer Thread를 구현합니다.
+        Thread consumer = new Thread(new Runnable() {
+
+        });
 
         // TODO#3-13 producer 또는 consumer 실행 중이라면 대기합니다. yield()를 이용해서 구현하세요.
+        do {
+            Thread.yield();
+        } while (producer.isAlive() || consumer.isAlive());
 
         int actual = enteringQueue.getQueueSize();
         Assertions.assertEquals(100,actual);

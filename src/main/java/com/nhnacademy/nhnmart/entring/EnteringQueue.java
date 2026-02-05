@@ -35,6 +35,7 @@ public class EnteringQueue {
     public EnteringQueue(){
         // TODO#3-1 기본 생성자 구현, capacity = DEFAULT_CAPACITY입니다.
         this.capacity = DEFAULT_CAPACITY;
+        queue = new LinkedList<>();
     }
 
     public EnteringQueue(int capacity) {
@@ -45,6 +46,7 @@ public class EnteringQueue {
 
         // TODO#3-3 capacity와 queue를 초기화합니다.
         this.capacity = capacity;
+        queue = new LinkedList<>();
     }
 
     public synchronized void addCustomer(Customer customer){
