@@ -80,13 +80,23 @@ class EnteringQueueTest {
 
         // TODO#3-12 2초 대기 후 enteringQueue.getCustomer() 호출해서 소비할 수 있도록 consumer Thread를 구현합니다.
         Thread consumer = new Thread(new Runnable() {
-
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    enteringQueue.getCustomer();
+                }
+                catch (InterruptedException e) {
+                    throw new RuntimeException();
+                }
+            }
         });
+        consumer.start();
 
         // TODO#3-13 producer 또는 consumer 실행 중이라면 대기합니다. yield()를 이용해서 구현하세요.
-        do {
+        while (producer.isAlive() || consumer.isAlive()) {
             Thread.yield();
-        } while (producer.isAlive() || consumer.isAlive());
+        }
 
         int actual = enteringQueue.getQueueSize();
         Assertions.assertEquals(100,actual);
