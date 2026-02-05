@@ -31,6 +31,9 @@ class EnteringQueueTest {
             Customer{id=99, name='NHN아카데미99', money=1000000}
             1~99 고객을 생성 후 enteringQueue 대기열에 등록합니다.
          */
+        for(int i = 1; i < 100; i++) {
+            enteringQueue.addCustomer(new Customer(i, String.format("NHN아카데미%d", i), 1000000));
+        }
 
     }
 
@@ -44,7 +47,7 @@ class EnteringQueueTest {
     @Test
     void addCustomer() throws Exception {
         // TODO#3-10 id=100인 고객을 enteringQueue에 등록하고 검증합니다.
-
+        enteringQueue.addCustomer(new Customer(100, "NHN아카데미100", 1000000));
     }
 
     @Test
