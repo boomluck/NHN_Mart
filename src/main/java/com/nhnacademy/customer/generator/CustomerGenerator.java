@@ -37,9 +37,13 @@ public class CustomerGenerator implements Runnable {
 
     public CustomerGenerator(EnteringQueue enteringQueue) {
         // TODO#4-1 enteringQueue null이면 'IllegalArgumentException'이 발생하는지 검증합니다.
+        if (enteringQueue == null) {
+            throw new IllegalArgumentException("오류 : enteringQueue가 null입니다.");
+        }
 
         // TODO#4-2 enteringQueue, atomicId를 0으로 초기화합니다.
-
+        this.enteringQueue = enteringQueue;
+        this.atomicId = new AtomicLong(0L);
     }
 
     @Override
@@ -49,6 +53,15 @@ public class CustomerGenerator implements Runnable {
             - while 조건을 수정하세요.
             - 1초 간격으로 회원을 enteringQueue의 대기열에 등록합니다.
         */
+        while(enteringQueue.getQueueSize() < 100) {
+            try {
+                Thread.sleep(1000);
+                enteringQueue.addCustomer(generate());
+            }
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     private Customer generate(){
@@ -58,7 +71,12 @@ public class CustomerGenerator implements Runnable {
             - 회원이름은 랜덤으로 생성됩니다.
                - 회원이름 생성 시 https://github.com/Devskiller/jfairy 이용해서 구현합니다.
          */
+        long id = atomicId.incrementAndGet();
 
-        return null;
+        Fairy fairy = Fairy.create();
+        Person person = fairy.person();
+        String name = person.getFirstName();
+
+        return new Customer(id, name, DEFAULT_MONEY);
     }
 }
