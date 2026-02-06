@@ -48,13 +48,8 @@ class CustomerGeneratorTest {
     void generatorTest() throws InterruptedException {
 
         // TODO#4-8 customerGenerator를 이용해서 customerGeneratorThread 초기화하고, 실행합니다.
-        Thread customerGeneratorThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                customerGenerator
-            }
-        });
-
+        Thread customerGeneratorThread = new Thread(customerGenerator);
+        customerGeneratorThread.start();
 
         // TODO#4-9 10초 대기합니다.
         try {
@@ -64,7 +59,7 @@ class CustomerGeneratorTest {
         }
 
         // TODO#4-10 customerGeneratorThread를 종료합니다.
-        customerGeneratorThread.stop();
+        customerGeneratorThread.interrupt();
 
         // assertions.assertAll 참고 ( ctrl + click or cmd + click)
         // https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertAll(java.lang.String,org.junit.jupiter.api.function.Executable...)
@@ -72,9 +67,11 @@ class CustomerGeneratorTest {
         Assertions.assertAll(
             ()->{
                 // TODO#4-11 interrupt 발생 시 customerGeneratorThread의 상태가 TERMINATED 상태인지 검증합니다.
+                assertEquals(Thread.State.TERMINATED, customerGeneratorThread.getState());
             },
             ()->{
                 // TODO#4-12 enteringQueue(대기열) 최대 Queue Size가 5 <-- 10초 동안 최대 5명의 고객이 대기열에 등록되었는지 검증합니다.
+                assertEquals(5, enteringQueue.getQueueSize());
             }
         );
     }

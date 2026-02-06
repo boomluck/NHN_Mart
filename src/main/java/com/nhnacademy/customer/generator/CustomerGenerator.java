@@ -53,7 +53,7 @@ public class CustomerGenerator implements Runnable {
             - while 조건을 수정하세요.
             - 1초 간격으로 회원을 enteringQueue의 대기열에 등록합니다.
         */
-        while(enteringQueue.getQueueSize() < 100) { // 임의로 100으로 잡았으나 올바른 판별식 아님
+        while(!Thread.currentThread().isInterrupted()) {
             try {
                 Thread.sleep(1000);
                 enteringQueue.addCustomer(generate());
