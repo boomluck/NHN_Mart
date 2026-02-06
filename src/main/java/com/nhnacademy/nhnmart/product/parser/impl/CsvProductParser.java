@@ -22,8 +22,10 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +40,12 @@ public class CsvProductParser implements ProductParser {
 
     public CsvProductParser() {
         // TODO#6-2-1 기본 생성자 구현, getProductsStream()을 이용해서 inputStream을 초기화합니다.
-
+        this.inputStream = getProductsStream();
     }
 
     public CsvProductParser(InputStream inputStream){
         // TODO#6-2-2 inputStream parameter로 전달됩니다. 초기화합니다.
-
+        this.inputStream = inputStream;
     }
 
     @Override
@@ -54,7 +56,17 @@ public class CsvProductParser implements ProductParser {
             - ProductParser interface의 getProductsStream()를 이용해서 구현합니다.
          */
         List<Product> products = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(getProductsStream()));
+        String line;
+        String[] lines;
 
+        try {
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return products;
     }
@@ -62,6 +74,8 @@ public class CsvProductParser implements ProductParser {
     @Override
     public void close() throws IOException {
         // TODO#6-2-5 inputStream 객체가 존재하면 close() 메서드를 호출해서 자원을 해제합니다.
-        
+        if (inputStream != null) {
+
+        }
     }
 }
