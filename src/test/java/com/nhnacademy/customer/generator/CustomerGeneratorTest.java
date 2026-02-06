@@ -48,10 +48,23 @@ class CustomerGeneratorTest {
     void generatorTest() throws InterruptedException {
 
         // TODO#4-8 customerGenerator를 이용해서 customerGeneratorThread 초기화하고, 실행합니다.
+        Thread customerGeneratorThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                customerGenerator
+            }
+        });
+
 
         // TODO#4-9 10초 대기합니다.
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         // TODO#4-10 customerGeneratorThread를 종료합니다.
+        customerGeneratorThread.stop();
 
         // assertions.assertAll 참고 ( ctrl + click or cmd + click)
         // https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertAll(java.lang.String,org.junit.jupiter.api.function.Executable...)
