@@ -69,16 +69,25 @@ public class EnteringQueue {
 
     public synchronized Customer getCustomer(){
         // TODO#3-6 queue가 비어 있다면 대기합니다.
-
+        while (queue.isEmpty()) {
+            try {
+                wait();
+            }
+            catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         // TODO#3-7 queue에서 customer를 반환합니다. 대기하고 있던 Thread를 깨웁니다.
+        Customer customer = queue.poll();
+        notifyAll();
 
-        return null;
+        return customer;
     }
 
     // TODO#3-8 queue size를 반환합니다.
     public int getQueueSize(){
-        return 0;
+        return queue.size();
     }
 
 }

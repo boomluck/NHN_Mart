@@ -31,27 +31,35 @@ class EnteringQueueTest {
             Customer{id=99, name='NHN아카데미99', money=1000000}
             1~99 고객을 생성 후 enteringQueue 대기열에 등록합니다.
          */
-
+        for (int i = 1; i < 100; i++) {
+            enteringQueue.addCustomer(new Customer(i, String.format("NHN아카데미{}", i), 1000000));
+        }
     }
 
     @Test
     @DisplayName("default queue capacity = 100")
     void constructorTest_InitCapacity() throws Exception {
         // TODO#3-9 EnteringQueue.class의 capacity 필드가 100인지 검증합니다. (ReflectionUtils 사용)
-
+        Try<Object> capacity = ReflectionUtils.tryToReadFieldValue(EnteringQueue.class, "capacity", enteringQueue);
+        Assertions.assertEquals(100, (int) capacity.get());
     }
 
     @Test
     void addCustomer() throws Exception {
         // TODO#3-10 id=100인 고객을 enteringQueue에 등록하고 검증합니다.
-
+        int beforeAdd = enteringQueue.getQueueSize();
+        enteringQueue.addCustomer(new Customer(100, "NHN아카데미100", 1000000));
+        int afterAdd = enteringQueue.getQueueSize();
+        Assertions.assertEquals(beforeAdd + 1, afterAdd);
     }
 
     @Test
     @DisplayName("queue - poll test")
     void getCustomer() {
         // TODO#3-11 enteringQueue에서 enteringQueue.getCustomer() 호출 시 반환되는 값을 검증합니다.
-
+        Customer customer = enteringQueue.getCustomer();
+        long id = customer.getId();
+        Assertions.assertEquals(1, id);
     }
 
     @Test
@@ -59,12 +67,36 @@ class EnteringQueueTest {
     void blockingTest() throws Exception {
         // TODO#3-12 producer Thread를 구현합니다.
         // id=100, id=101 고객을 추가합니다.
+        Thread producer = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                enteringQueue.addCustomer(new Customer(100, "NHN아카데미100", 1000000));
+                enteringQueue.addCustomer(new Customer(101, "NHN아카데미101", 1000000));
+            }
+        });
+        producer.start();
 
         // TODO#3-13 2초 대기 후 enteringQueue.getCustomer()를 호출하여 소비할 수 있도록 consumer Thread를 구현합니다.
+        Thread consumer = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    enteringQueue.getCustomer();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException();
+                }
+            }
+        });
+
+        consumer.start();
 
         // TODO#3-14 producer 또는 consumer가 실행 중이라면 대기합니다. yield()를 이용해서 구현하세요.
+        do {
+            Thread.yield();
+        } while(producer.isAlive() || consumer.isAlive());
 
         // TODO#3-15 enteringQueue의 size가 100인지 검증합니다.
-
+        Assertions.assertEquals(100, enteringQueue.getQueueSize());
     }
 }
